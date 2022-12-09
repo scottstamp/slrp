@@ -25,13 +25,14 @@ type Checker interface {
 var (
 	firstPass = []string{
 		// these check for ext ip, but don't show headers
-		"https://ifconfig.me/ip", // okhttp
+		//"https://ifconfig.me/ip", // okhttp
 		//"https://ifconfig.io/ip",
-		"https://myexternalip.com/raw", // okhttp
-		"https://ipv4.icanhazip.com/",  // okhttp
-		"https://ipinfo.io/ip",         // okhttp
-		"https://api.ipify.org/",       // okhttp
-		"https://wtfismyip.com/text",   // okhttp
+		//"https://myexternalip.com/raw", // okhttp
+		//"https://ipv4.icanhazip.com/",  // okhttp
+		//"https://ipinfo.io/ip",         // okhttp
+		//"https://api.ipify.org/",       // okhttp
+		//"https://wtfismyip.com/text",   // okhttp
+		"https://www.habbo.com/"
 	}
 	secondPass = map[string]string{
 		// checks for X-Forwarded-For and alikes
@@ -212,12 +213,18 @@ func (sc *simple) validate(body string) error {
 	if strings.Contains(body, sc.ip) {
 		return ErrNotAnonymous
 	}
-	if sc.valid == "" && !ipRegex.MatchString(body) {
+	if strings.Contains(body, "Forbidden") {
+		return ErrNotAnonymous
+	}
+	if strings.Contains(body, "dosarrest") {
+		return ErrNotAnonymous
+	}
+	/*if sc.valid == "" && !ipRegex.MatchString(body) {
 		return fmt.Errorf("not ip: %s", truncatedBody(body))
-	}
-	if !strings.Contains(body, sc.valid) {
+	}*/
+	/*if !strings.Contains(body, sc.valid) {
 		return fmt.Errorf("no %s found: %s", sc.valid, truncatedBody(body))
-	}
+	}*/
 	return nil
 }
 
